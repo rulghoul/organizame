@@ -15,10 +15,10 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /home/ubuntu/docker/traefik/traefik.yml:/traefik.yml:ro
-      - /home/ubuntu/docker/traefik/acme.json:/acme.json
-      - /home/ubuntu/docker/traefik/config.yml:/config.yml:ro
-      - /home/ubuntu/docker/traefik/logs:/var/log/traefik
+      - ./traefik.yml:/traefik.yml:ro
+      - ./acme.json:/acme.json
+      - ./config.yml:/config.yml:ro
+      - ./logs:/var/log/traefik
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
