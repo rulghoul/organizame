@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
-    entrypoint: ["bash", "/etc/crowdsec/entry.sh"]
+    entrypoint: ["/bin/sh", "/etc/crowdsec/entry.sh"]
 
 networks:
   proxy:
