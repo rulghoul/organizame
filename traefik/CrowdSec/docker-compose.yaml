@@ -24,7 +24,6 @@ services:
       CROWDSEC_AGENT_HOST: crowdsec:8080
     volumes:
       - ./config:/etc/crowdsec/
-      - ./entry.sh:/etc/crowdsec/entry.sh
     networks:
       - proxy
     depends_on:
@@ -32,7 +31,7 @@ services:
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
-    entrypoint: ["/bin/sh", "/usr/local/bin/entry.sh"]
+    entrypoint: ["/bin/sh", "/etc/crowdsec/entry.sh"]
 
 networks:
   proxy:
