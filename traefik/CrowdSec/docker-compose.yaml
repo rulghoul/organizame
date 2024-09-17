@@ -18,7 +18,7 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    entrypoint: ["/bin/bash", "/etc/crowdsec/init.sh"] 
+    entrypoint: ["bash", "/etc/crowdsec/init.sh"] 
 
   bouncer-traefik:
     image: docker.io/fbonalair/traefik-crowdsec-bouncer:latest
@@ -28,7 +28,7 @@ services:
       CROWDSEC_AGENT_HOST: crowdsec:8080
     volumes:
       - ./bouncer_api_key:/etc/crowdsec/bouncer_api_key:ro
-      - ./init.sh:/etc/crowdsec/entry.sh
+      - ./entry.sh:/etc/crowdsec/entry.sh
     networks:
       - proxy
     depends_on:
@@ -36,7 +36,7 @@ services:
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
-    entrypoint: ["/bin/sh", "/usr/local/bin/entry.sh"]
+    entrypoint: ["bash", "/usr/local/bin/entry.sh"]
 
 networks:
   proxy:
