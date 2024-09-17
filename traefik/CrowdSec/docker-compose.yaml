@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    environment:
+      GID: "${GID-1000}"
+      COLLECTIONS: "crowdsecurity/linux crowdsecurity/traefik"
+    volumes:
+      - /home/ubuntu/docker/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
+      - /home/ubuntu/docker/crowdsec/db:/var/lib/crowdsec/data/
+      - /home/ubuntu/docker/crowdsec/config:/etc/crowdsec/
+      - /home/ubuntu/docker/traefik/logs:/var/log/traefik/:ro
+      - ./crowdsec-init.sh:/etc/crowdsec/crowdsec-init.sh
+      - ./bouncer_api_key:/etc/crowdsec/bouncer_api_key  # Para compartir la clave    
+    networks:
+      - proxy
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    entrypoint: ["/bin/bash", "/etc/crowdsec/init.sh"] 
+
+  bouncer-traefik:
+    image: docker.io/fbonalair/traefik-crowdsec-bouncer:latest
+    container_name: bouncer-traefik
+    environment:
+      CROWDSEC_BOUNCER_API_KEY: "${BOUNCER_API_KEY}"
+      CROWDSEC_AGENT_HOST: crowdsec:8080
+    volumes:
+      - ./bouncer_api_key:/etc/crowdsec/bouncer_api_key:ro
+    networks:
+      - proxy
+    depends_on:
+      - crowdsec
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    entrypoint: ["/bin/sh", "/usr/local/bin/entry.sh"]
+
+networks:
+  proxy:
+    external: true
