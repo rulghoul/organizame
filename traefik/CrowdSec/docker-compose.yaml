@@ -11,8 +11,7 @@ services:
       - ./db:/var/lib/crowdsec/data/
       - ./config:/etc/crowdsec/
       - .././logs:/var/log/traefik/:ro
-      - ./init.sh:/etc/crowdsec/init.sh
-      - ./bouncer_api_key:/etc/crowdsec/bouncer_api_key  # Para compartir la clave    
+      - ./init.sh:/etc/crowdsec/init.sh 
     networks:
       - proxy
     security_opt:
@@ -27,7 +26,7 @@ services:
       CROWDSEC_BOUNCER_API_KEY: "${BOUNCER_API_KEY}"
       CROWDSEC_AGENT_HOST: crowdsec:8080
     volumes:
-      - ./bouncer_api_key:/etc/crowdsec/bouncer_api_key:ro
+      - ./config:/etc/crowdsec/
       - ./entry.sh:/etc/crowdsec/entry.sh
     networks:
       - proxy
