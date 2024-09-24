@@ -1,7 +1,7 @@
 services:
   reverse-proxy:
     # The official v3 Traefik docker image
-    image: traefik:v3.0
+    image: traefik:v3.1
     container_name: reverse-proxy
     # Enables the web UI and tells Traefik to listen to docker
     command:
@@ -13,7 +13,7 @@ services:
       - "--entryPoints.websecure.address=:443"
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.myresolver.acme.email=vivadagon@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.email=${CERTIFICATE_MAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       - "80:80"
@@ -27,6 +27,13 @@ services:
       - no-new-privileges:true
     networks:
       - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.auth.basicauth.users=usuario:$(TRAEFIK_AUTH_USER)"
+      - "traefik.http.routers.traefik.middlewares=auth"
 
   whoami:
     # A container that exposes an API to show its IP address
@@ -36,10 +43,10 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.rulo-desarrollo.cfd`)"
+      - "traefik.http.routers.whoami.rule=Host(`${WHOAMI_DOMAIN}`)"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.tls.certresolver=myresolver"
-      
+
 networks:
   proxy:
     external: true  # Si la red es externa
