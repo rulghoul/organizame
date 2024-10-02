@@ -33,7 +33,7 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_DOMAIN}`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.traefik.basicauth.users=usuario:$(TRAEFIK_AUTH_USER)"
+      - "traefik.http.middlewares.traefik.basicauth.users=${TRAEFIK_AUTH_USER}"
       - "traefik.http.routers.traefik.middlewares=auth"
 
   whoami:
