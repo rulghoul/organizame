@@ -7,20 +7,21 @@ services:
     command:
       #- "--log.level=DEBUG"
       - "--api.insecure=true"
-      - "--providers.docker=true"
+      - "--providers.docker"
       - "--providers.docker.exposedbydefault=false"
-      - "--entryPoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       - "--certificatesresolvers.myresolver.acme.email=${CERTIFICATE_MAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
     ports:
       - "80:80"
       - "443:443"
       - "8080:8080"
     volumes:      
-      - "./letsencrypt:/letsencrypt"
+      - "letsencrypt:/letsencrypt"
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     security_opt:
