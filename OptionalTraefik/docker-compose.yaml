@@ -35,6 +35,7 @@ services:
       - "traefik.http.routers.traefik.tls.certresolver=myresolver"
       - "traefik.http.middlewares.traefik.basicauth.users=${TRAEFIK_AUTH_USER}"
       - "traefik.http.routers.traefik.middlewares=auth"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
 
   whoami:
     # A container that exposes an API to show its IP address
