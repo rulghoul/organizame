@@ -19,7 +19,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
     volumes:      
       - ./letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
@@ -28,14 +27,6 @@ services:
       - no-new-privileges:true
     networks:
       - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.routers.traefik.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.traefik.basicauth.users=${TRAEFIK_AUTH_USER}"
-      - "traefik.http.routers.traefik.middlewares=auth"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
 
   whoami:
     # A container that exposes an API to show its IP address
