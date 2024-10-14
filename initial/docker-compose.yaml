@@ -2,7 +2,7 @@ services:
 
   reverse-proxy:
     # The official v3 Traefik docker image
-    image: traefik:lasted
+    image: traefik:v3.2
     container_name: reverse-proxy
     # Enables the web UI and tells Traefik to listen to docker
     command:
