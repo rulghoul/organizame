@@ -45,6 +45,8 @@ services:
     networks:
       - proxy
 
+volumes:
+  portainer_data:
 
 networks:
   proxy:
