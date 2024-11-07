@@ -29,7 +29,7 @@ services:
       - wordpress:/var/www/html
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${URL_SERVICIO}`)"
+      - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${SERVICE_NAME}.${DOMINIO}`)"
       - "traefik.http.routers.${SERVICE_NAME}.entrypoints=websecure"
       - "traefik.http.routers.${SERVICE_NAME}.tls.certresolver=myresolver"
       - "traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=80"
