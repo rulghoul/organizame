@@ -1,32 +1,41 @@
 services:
-  mysql:
-    image: mariadb:lts
+  mariadb:
+    image: mariadb:latest
     command: '--default-authentication-plugin=mysql_native_password'
     volumes:
       - mysql:/var/lib/mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
-      MYSQL_DATABASE: ${SERVICE}
-      MYSQL_USER: ${SERVICE}
-      MYSQL_PASSWORD: ${PASSWORD}    
+      MYSQL_DATABASE: ${SERVICE_NAME}
+      MYSQL_USER: ${USER}
+      MYSQL_PASSWORD: ${PASSWORD}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect",]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
     expose:
       - 3306
     networks:
       - default
 
   wordpress:
-    image: wordpress:latest    
-    restart: unless-stopped
+    image: wordpress:latest
     depends_on:
-      - mysql
+      mariadb:
+        condition: service_healthy
     environment:
-      WORDPRESS_DB_HOST: mysql:3306
-      WORDPRESS_DB_NAME: ${SERVICE}
-      WORDPRESS_DB_USER: ${SERVICE}
+      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_NAME: ${SERVICE_NAME}
+      WORDPRESS_DB_USER: ${USER}
       WORDPRESS_DB_PASSWORD: ${PASSWORD}
     volumes:
       - wordpress:/var/www/html
+    restart: unless-stopped
+    ports:
+      - 1777:80
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${SERVICE_NAME}.${DOMINIO}`)"
